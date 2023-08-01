@@ -16,8 +16,8 @@ color RayColor(const ray& r, const Hittable& world)
     }
 
     vec3 unitDirection = Normalize(r.Direction());
-    float t = 0.5f * (unitDirection.y() + 1.0f);
-    return ((1.f - t) * color(1.f)) + (t * color(0.5f, 0.7f, 1.0f));
+    float t = 0.5f * (unitDirection.y() + 1.f);
+    return ((1.f - t) * color(1.f)) + (t * color(0.5f, 0.7f, 1.f));
 }
 
 int main()
