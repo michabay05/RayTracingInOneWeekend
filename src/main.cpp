@@ -38,11 +38,11 @@ int main()
 
     // Render
     // Open file for writing
-    auto start = std::chrono::high_resolution_clock::now();
     std::ofstream outputFile("output.ppm");
     // Write PPM header
     outputFile << "P3\n" << IMG_WIDTH << ' ' << IMG_HEIGHT << "\n255\n";
 
+    auto start = std::chrono::high_resolution_clock::now();
     for (int j = IMG_HEIGHT - 1; j >= 0; j--) {
         std::cout << "\rScanlines remaining: " << j << ' ' << std::flush;
         for (int i = 0; i < IMG_WIDTH; i++) {
