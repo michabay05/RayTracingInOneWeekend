@@ -1,5 +1,6 @@
 CXX=g++
-CXXFLAGS=-Wall -Wextra -pedantic -std=c++17
+CXXFLAGS=-Wall -Wextra -pedantic -std=c++17 -Isrc -Ivendor
+LNKFLAG=-Lvendor/ -lraylib -lwinmm -lopengl32 -lgdi32
 
 .PHONY: all compile run
 
@@ -10,4 +11,4 @@ run:
 	./raytracing
 
 compile:
-	g++ $(CXXFLAGS) -o raytracing src/main.cpp -O2
+	g++ $(CXXFLAGS) -o raytracing src/main.cpp -O2 $(LNKFLAG)

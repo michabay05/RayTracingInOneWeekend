@@ -1,9 +1,9 @@
 #include <chrono>
 #include <fstream>
 
-#define RAYLIB_VERSION
+#define RAYLIB_RENDER
 
-#ifdef RAYLIB_VERSION
+#ifdef RAYLIB_RENDER
 #include "raylib.h"
 #endif
 
@@ -31,13 +31,13 @@ const int IMG_WIDTH = 400;
 const int IMG_HEIGHT = (int)(IMG_WIDTH / ASPECT_RATIO);
 const int SAMPLES_PER_PIXEL = 100;
 
-#ifdef RAYLIB_VERSION
+#ifdef RAYLIB_RENDER
 Texture2D RenderToRaylibTex(rtiw::HittableList& world, rtiw::Camera& cam, Image& image, long long& timeInMS)
 #else
 void RenderToPPM(rtiw::HittableList& world, rtiw::Camera& cam, const std::string filename, long long& timeInMS)
 #endif
 {
-#ifndef RAYLIB_VERSION
+#ifndef RAYLIB_RENDER
 	// Open file for writing
 	std::ofstream outputFile(filename);
 	// Write PPM header
@@ -46,7 +46,7 @@ void RenderToPPM(rtiw::HittableList& world, rtiw::Camera& cam, const std::string
 
 	auto start = std::chrono::high_resolution_clock::now();
 	for (int j = IMG_HEIGHT - 1; j >= 0; j--) {
-#ifndef RAYLIB_VERSION
+#ifndef RAYLIB_RENDER
 		std::cout << "\rScanlines remaining: " << j << ' ' << std::flush;
 #endif
 		for (int i = 0; i < IMG_WIDTH; i++) {
@@ -57,7 +57,7 @@ void RenderToPPM(rtiw::HittableList& world, rtiw::Camera& cam, const std::string
 				rtiw::ray r = cam.GetRay(u, v);
 				pixelColor += RayColor(r, world);
 			}
-#ifdef RAYLIB_VERSION
+#ifdef RAYLIB_RENDER
 			rtiw::color a = UnNormalizeColor(pixelColor, SAMPLES_PER_PIXEL);
 			ImageDrawPixel(&image, i, IMG_HEIGHT-j, {(unsigned char)a[0], (unsigned char)a[1], (unsigned char)a[2], 255});
 #else
@@ -70,7 +70,7 @@ void RenderToPPM(rtiw::HittableList& world, rtiw::Camera& cam, const std::string
 	auto durationInMS = std::chrono::duration_cast<std::chrono::milliseconds>(end - start);
 	timeInMS = durationInMS.count();
 
-#ifdef RAYLIB_VERSION
+#ifdef RAYLIB_RENDER
 	return LoadTextureFromImage(image);
 #else
 	// Close file
@@ -89,7 +89,7 @@ int main()
 	rtiw::Camera cam;
 
 	long long timeInMS = 0;
-#ifdef RAYLIB_VERSION
+#ifdef RAYLIB_RENDER
 	InitWindow(800, 625, "RayTracing In One Weekend");
 	Image img = GenImageColor(IMG_WIDTH, IMG_HEIGHT, BLANK);
 	Texture2D tex = RenderToRaylibTex(world, cam, img, timeInMS);
