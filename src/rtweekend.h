@@ -7,11 +7,11 @@
 
 /* ----------------------- Constants ----------------------- */
 const float INF = std::numeric_limits<float>::infinity();
-const float PI = (float)3.1415926535897932385;
+const float F_PI = (float)3.1415926535897932385;
 
 /* ----------------------- Utility functions ----------------------- */
 inline float DegreesToRadians(float degrees) {
-    return degrees * PI / 180.f;
+    return degrees * F_PI / 180.f;
 }
 
 // Returns a random real number in [0, 1)

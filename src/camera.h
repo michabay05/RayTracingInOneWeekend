@@ -2,9 +2,11 @@
 
 #include "rtweekend.h"
 
+namespace rtiw
+{
 class Camera
 {
-public:
+  public:
     Camera()
     {
         const float ASPECT_RATIO = 16.f / 9.f;
@@ -15,7 +17,8 @@ public:
         m_Origin = point3::Zero();
         m_Horizontal = vec3(viewportWidth, 0.f, 0.f);
         m_Vertical = vec3(0.f, viewportHeight, 0.f);
-        m_LowerLeftCorner = m_Origin - (m_Horizontal / 2) - (m_Vertical / 2) - vec3(0, 0, focalLength);
+        m_LowerLeftCorner =
+            m_Origin - (m_Horizontal / 2) - (m_Vertical / 2) - vec3(0, 0, focalLength);
     }
 
     ray GetRay(float u, float v) const
@@ -23,9 +26,10 @@ public:
         return ray(m_Origin, m_LowerLeftCorner + u * m_Horizontal + v * m_Vertical - m_Origin);
     }
 
-private:
+  private:
     point3 m_Origin;
     point3 m_LowerLeftCorner;
     vec3 m_Horizontal;
     vec3 m_Vertical;
 };
+} // namespace rtiw

@@ -2,15 +2,17 @@
 
 #include "hittable.h"
 
+namespace rtiw
+{
 class Sphere : public Hittable
 {
-public:
+  public:
     Sphere() {}
     Sphere(point3 c, float r) : m_Center(c), m_Radius(r) {}
 
     virtual bool Hit(const ray& r, float tMin, float tMax, HitRecord& rec) const override;
-    
-private:
+
+  private:
     point3 m_Center;
     float m_Radius;
 };
@@ -23,7 +25,8 @@ bool Sphere::Hit(const ray& r, float tMin, float tMax, HitRecord& rec) const
     float c = oc.LengthSquared() - (m_Radius * m_Radius);
     // Quadratic formula discriminant
     float discriminant = (half_b * half_b) - (a * c);
-    if (discriminant < 0) return false;
+    if (discriminant < 0)
+        return false;
 
     // Find the nearest root that lies in the acceptable range
     float sqrtDiscriminant = sqrtf(discriminant);
@@ -43,3 +46,4 @@ bool Sphere::Hit(const ray& r, float tMin, float tMax, HitRecord& rec) const
 
     return true;
 }
+} // namespace rtiw

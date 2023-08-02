@@ -5,9 +5,11 @@
 #include <memory>
 #include <vector>
 
+namespace rtiw
+{
 class HittableList : public Hittable
 {
-public:
+  public:
     HittableList() {}
     HittableList(std::shared_ptr<Hittable> object) { Add(object); }
 
@@ -16,7 +18,7 @@ public:
 
     virtual bool Hit(const ray& r, float tMin, float tMax, HitRecord& rec) const override;
 
-private:
+  private:
     std::vector<std::shared_ptr<Hittable>> m_Objects;
 };
 
@@ -36,3 +38,4 @@ bool HittableList::Hit(const ray& r, float tMin, float tMax, HitRecord& rec) con
 
     return hitAnything;
 }
+} // namespace rtiw

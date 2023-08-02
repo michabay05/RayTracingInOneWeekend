@@ -4,7 +4,7 @@
 
 #include <iostream>
 
-inline void WriteColor(std::ostream& out, color pixelColor, int samplesPerPixel)
+inline rtiw::color UnNormalizeColor(rtiw::color pixelColor, int samplesPerPixel)
 {
     float r = pixelColor.x();
     float g = pixelColor.y();
@@ -16,7 +16,13 @@ inline void WriteColor(std::ostream& out, color pixelColor, int samplesPerPixel)
     g *= scale;
     b *= scale;
 
-    out << (int)(256 * Clamp(r, 0.f, 0.999f)) << ' '
-        << (int)(256 * Clamp(g, 0.f, 0.999f)) << ' '
-        << (int)(256 * Clamp(b, 0.f, 0.999f)) << '\n';
+    return rtiw::color((int)(256 * Clamp(r, 0.f, 0.999f)), (int)(256 * Clamp(g, 0.f, 0.999f)),
+                       (int)(256 * Clamp(b, 0.f, 0.999f)));
+}
+
+inline void WriteColor(std::ostream& out, rtiw::color pixelColor, int samplesPerPixel)
+{
+    rtiw::color c = UnNormalizeColor(pixelColor, samplesPerPixel);
+
+    out << c << "\n";
 }
