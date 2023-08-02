@@ -33,39 +33,22 @@ const int SAMPLES_PER_PIXEL = 100;
 
 #ifdef RAYLIB_VERSION
 Texture2D RenderToRaylibTex(rtiw::HittableList& world, rtiw::Camera& cam, Image& image, long long& timeInMS)
-{
-	auto start = std::chrono::high_resolution_clock::now();
-	for (int j = IMG_HEIGHT - 1; j >= 0; j--) {
-		for (int i = 0; i < IMG_WIDTH; i++) {
-			rtiw::color pixelColor(0);
-			for (int s = 0; s < SAMPLES_PER_PIXEL; s++) {
-				float u = (i + RandFloat()) / (IMG_WIDTH - 1);
-				float v = (j + RandFloat()) / (IMG_HEIGHT - 1);
-				rtiw::ray r = cam.GetRay(u, v);
-				pixelColor += RayColor(r, world);
-			}
-			rtiw::color a = UnNormalizeColor(pixelColor, SAMPLES_PER_PIXEL);
-			ImageDrawPixel(&image, i, IMG_HEIGHT-j, {(unsigned char)a[0], (unsigned char)a[1], (unsigned char)a[2], 255});
-		}
-	}
-
-	auto end = std::chrono::high_resolution_clock::now();
-	auto durationInMS = std::chrono::duration_cast<std::chrono::milliseconds>(end - start);
-	timeInMS = durationInMS.count();
-
-	return LoadTextureFromImage(image);
-}
 #else
 void RenderToPPM(rtiw::HittableList& world, rtiw::Camera& cam, const std::string filename, long long& timeInMS)
+#endif
 {
+#ifndef RAYLIB_VERSION
 	// Open file for writing
 	std::ofstream outputFile(filename);
 	// Write PPM header
 	outputFile << "P3\n" << IMG_WIDTH << ' ' << IMG_HEIGHT << "\n255\n";
+#endif
 
 	auto start = std::chrono::high_resolution_clock::now();
 	for (int j = IMG_HEIGHT - 1; j >= 0; j--) {
+#ifndef RAYLIB_VERSION
 		std::cout << "\rScanlines remaining: " << j << ' ' << std::flush;
+#endif
 		for (int i = 0; i < IMG_WIDTH; i++) {
 			rtiw::color pixelColor(0);
 			for (int s = 0; s < SAMPLES_PER_PIXEL; s++) {
@@ -74,7 +57,12 @@ void RenderToPPM(rtiw::HittableList& world, rtiw::Camera& cam, const std::string
 				rtiw::ray r = cam.GetRay(u, v);
 				pixelColor += RayColor(r, world);
 			}
+#ifdef RAYLIB_VERSION
+			rtiw::color a = UnNormalizeColor(pixelColor, SAMPLES_PER_PIXEL);
+			ImageDrawPixel(&image, i, IMG_HEIGHT-j, {(unsigned char)a[0], (unsigned char)a[1], (unsigned char)a[2], 255});
+#else
 			WriteColor(outputFile, pixelColor, SAMPLES_PER_PIXEL);
+#endif
 		}
 	}
 
@@ -82,10 +70,13 @@ void RenderToPPM(rtiw::HittableList& world, rtiw::Camera& cam, const std::string
 	auto durationInMS = std::chrono::duration_cast<std::chrono::milliseconds>(end - start);
 	timeInMS = durationInMS.count();
 
+#ifdef RAYLIB_VERSION
+	return LoadTextureFromImage(image);
+#else
 	// Close file
 	outputFile.close();
-}
 #endif
+}
 
 int main()
 {
