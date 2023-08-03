@@ -8,13 +8,16 @@ class Sphere : public Hittable
 {
   public:
     Sphere() {}
-    Sphere(point3 c, float r) : m_Center(c), m_Radius(r) {}
+    Sphere(point3 c, float r, std::shared_ptr<Material> m) : m_Center(c), m_Radius(r), m_Mat_Ptr(m)
+    {
+    }
 
     virtual bool Hit(const ray& r, float tMin, float tMax, HitRecord& rec) const override;
 
   private:
     point3 m_Center;
     float m_Radius;
+    std::shared_ptr<Material> m_Mat_Ptr;
 };
 
 bool Sphere::Hit(const ray& r, float tMin, float tMax, HitRecord& rec) const
@@ -43,6 +46,7 @@ bool Sphere::Hit(const ray& r, float tMin, float tMax, HitRecord& rec) const
     rec.HitPoint = r.At(rec.t);
     vec3 outwardNormal = (rec.HitPoint - m_Center) / m_Radius;
     rec.SetFaceNormal(r, outwardNormal);
+    rec.Mat_Ptr = m_Mat_Ptr;
 
     return true;
 }

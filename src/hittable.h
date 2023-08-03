@@ -1,13 +1,17 @@
 #pragma once
 
 #include "ray.h"
+#include "rtweekend.h"
 
 namespace rtiw
 {
+class Material;
+
 struct HitRecord
 {
     point3 HitPoint;
     vec3 Normal;
+    std::shared_ptr<Material> Mat_Ptr;
     float t;
     bool FrontFace;
 

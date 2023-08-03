@@ -12,9 +12,9 @@ inline rtiw::color UnNormalizeColor(rtiw::color pixelColor, int samplesPerPixel)
 
     // Divide the color by the number of samples
     float scale = 1.f / samplesPerPixel;
-    r *= scale;
-    g *= scale;
-    b *= scale;
+    r = sqrtf(scale * r);
+    g = sqrtf(scale * g);
+    b = sqrtf(scale * b);
 
     return rtiw::color((int)(256 * Clamp(r, 0.f, 0.999f)), (int)(256 * Clamp(g, 0.f, 0.999f)),
                        (int)(256 * Clamp(b, 0.f, 0.999f)));

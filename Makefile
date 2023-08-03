@@ -1,6 +1,6 @@
 CXX=g++
-CXXFLAGS=-Wall -Wextra -pedantic -std=c++17 -Isrc -Ivendor
-LNKFLAG=-Lvendor/ -lraylib -lwinmm -lopengl32 -lgdi32
+CXXFLAGS=-Wall -Wextra -pedantic -std=c++17 -Isrc -Ivendor/raylib/include
+LNKFLAG=-Lvendor/raylib/lib -lraylib -lwinmm -lopengl32 -lgdi32
 
 .PHONY: all compile run
 

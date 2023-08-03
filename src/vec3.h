@@ -3,6 +3,8 @@
 #include <cmath>
 #include <iostream>
 
+#include "rtweekend.h"
+
 namespace rtiw
 {
 class vec3
@@ -20,8 +22,20 @@ class vec3
     float operator[](int i) const { return m_El[i]; }
     float& operator[](int i) { return m_El[i]; }
 
-    static vec3 Back() { return vec3(0.f, 0.f, -1.f); }
-    static vec3 Zero() { return vec3(0.f); }
+    inline static vec3 Back() { return vec3(0.f, 0.f, -1.f); }
+    inline static vec3 Zero() { return vec3(0.f); }
+
+    inline static vec3 Random(float min, float max)
+    {
+        return vec3(RandFloat(min, max), RandFloat(min, max), RandFloat(min, max));
+    }
+    inline static vec3 Random() { return vec3(RandFloat(), RandFloat(), RandFloat()); }
+
+    inline bool NearZero() const {
+        // Return true if the vector is close to zero in all dimensions
+        const float eps = (float)0.000001;
+        return (fabs(m_El[0]) < eps) && (fabs(m_El[1]) < eps) && (fabs(m_El[2]) < eps);
+    }
 
     vec3& operator+=(const vec3& v)
     {
@@ -94,4 +108,28 @@ inline vec3 Cross(const vec3& u, const vec3& v)
 }
 
 inline vec3 Normalize(const vec3& v) { return v / v.Length(); }
+
+inline static vec3 RandomInUnitSphere()
+{
+    while (true) {
+        auto p = vec3::Random(-1, 1);
+        if (p.LengthSquared() >= 1)
+            continue;
+        return p;
+    }
+}
+
+inline vec3 RandomNormalized() { return Normalize(RandomInUnitSphere()); }
+
+inline vec3 RandomInHemisphere(const vec3& normal) {
+    vec3 inUnitSphere = RandomInUnitSphere();
+    if (Dot(inUnitSphere, normal) > 0.f) // In the same hemisphere as the normal
+        return inUnitSphere;
+    else
+        return -inUnitSphere;
+}
+
+inline vec3 Reflect(const vec3& v, const vec3& n) {
+    return v - (2 * Dot(v, n) * n);
+}
 } // namespace rtiw
